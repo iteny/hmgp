@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"hmgp/ctrl/admin"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,8 @@ func helloHandler(c *gin.Context) {
 
 // SetupRouter 配置路由信息
 func Admin(e *gin.Engine) {
-
+	login := admin.LoginCtrlObject()
+	e.GET("/admin/login", login.IndexHandler)
 	e.GET("/hello", helloHandler)
 
 }
