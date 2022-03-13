@@ -28,7 +28,7 @@
     <div class="card-body">
       <!-- <p class="login-box-msg">Sign in to start your session</p> -->
 
-      <form id="loginForm" action="/admin/index" method="post">
+      <form id="loginForm" action="/admin/loginPost" method="post">
         <div class="input-group mb-3 form-group">
           <input type="username" name="username" class="form-control" placeholder="username">
           <div class="input-group-append">
@@ -56,7 +56,7 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button id="loginButton" type="submit" class="btn btn-primary btn-block">登录</button>
+            <button id="loginButton" type="button" class="btn btn-primary btn-block">登录</button>
           </div>
           <!-- /.col -->
         </div>
@@ -105,6 +105,7 @@ $(function () {
     }
   });
   $('#loginForm').validate({
+    onsubmit:false,
     rules: {
       username: {
         required: true,
@@ -139,50 +140,96 @@ $(function () {
     },
     unhighlight: function (element, errorClass, validClass) {
       $(element).removeClass('is-invalid');
-    },submitHandler:function(form){
-          var that = $(this);
+    },
+    // },submitHandler:function(form){
+    //       var that = $(this);
+    //           // form = $('form[name=hm_form_login]');
+    //           // vali = form.form('enableValidation').form('validate');
+    //           that.attr("option","false");
+    //       if (that.attr("option") == true){
+    //         alert("12321");
+    //       }else{
+    //         alert("11111");
+    //           // that.attr("option","true");
+    //           // toastr.info("你有新消息了!"); 
+              
+    //           $.ajax({
+    //               url: form.attr('action'),
+    //               dataType:'json',
+    //               type:'POST',
+    //               data:form.serialize(),
+    //               beforeSend: function(){
+    //                   // hm.openProgress(hm.language.loginMsg);
+    //               },
+    //               success: function(data){
+    //                 alert("23e2");
+    //                   if(data.status == 4){
+    //                       toastr.error("你有新消息了!");
+    //                       // hm.notice("error", hm.language.loginPassFail+data.info);
+    //                   }
+    //                   that.attr("option","false");
+    //                   if(data.status !== 1){
+    //                       // setTimeout(function () {
+    //                       //     hm.closeProgress(); //当页面加载完毕执行
+    //                       // }, 500);
+    //                   }
+    //               },
+    //               error: function (XMLHttpRequest, textStatus, errorThrown) {
+    //                   // parent.hm.notice("error", 'status:'+XMLHttpRequest.status+',readyState:'+XMLHttpRequest.readyState+',textStatus:'+textStatus);
+    //                   that.attr("option","false");
+    //                   // setTimeout(function () {
+    //                   //     parent.hm.closeProgress(); //当页面加载完毕执行
+    //                   // }, 500);
+    //               }
+    //           });
+              
+    //       }
+    // }
+
+  });
+  $('#loginButton').on('click', function (e) {
+      e.preventDefault();
+      var flag = $("#loginForm").valid();
+      if(!flag){
+          //没有通过验证
+          return;
+      }
+      var form = $("#loginForm");
+      var that = $(this);
               // form = $('form[name=hm_form_login]');
               // vali = form.form('enableValidation').form('validate');
               that.attr("option","false");
-          if (that.attr("option") == true){
-            alert("12321");
-          }else{
-            alert("11111");
-              // that.attr("option","true");
-              // toastr.info("你有新消息了!"); 
-              
-              $.ajax({
-                  url: form.attr('action'),
-                  dataType:'json',
-                  type:'POST',
-                  data:form.serialize(),
-                  beforeSend: function(){
-                      hm.openProgress(hm.language.loginMsg);
-                  },
-                  success: function(data){
-                      if(data.status == 4){
-                          toastr.error("你有新消息了!");
-                          hm.notice("error", hm.language.loginPassFail+data.info);
-                      }
-                      that.attr("option","false");
-                      if(data.status !== 1){
-                          setTimeout(function () {
-                              hm.closeProgress(); //当页面加载完毕执行
-                          }, 500);
-                      }
-                  },
-                  error: function (XMLHttpRequest, textStatus, errorThrown) {
-                      parent.hm.notice("error", 'status:'+XMLHttpRequest.status+',readyState:'+XMLHttpRequest.readyState+',textStatus:'+textStatus);
-                      that.attr("option","false");
-                      setTimeout(function () {
-                          parent.hm.closeProgress(); //当页面加载完毕执行
-                      }, 500);
-                  }
-              });
-              
-          }
+      if (that.attr("option") == true){
+        alert("12321");
+      }else{
+        $.ajax({
+            url: form.attr('action'),
+            dataType:'json',
+            type:'POST',
+            data:form.serialize(),
+            beforeSend: function(){
+                // hm.openProgress(hm.language.loginMsg);
+            },
+            success: function(data){
+                if(data.status == 1){
+                    toastr.success("登录成功!","success");
+                    var redirect = "/login/index";
+                    setTimeout(function(){parent.window.location.href=redirect}, 3000);
+                }else{
+                    toastr.error(data.info,"error");
+                }
+                that.attr("option","false");
+                
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // parent.hm.notice("error", 'status:'+XMLHttpRequest.status+',readyState:'+XMLHttpRequest.readyState+',textStatus:'+textStatus);
+                that.attr("option","false");
+                // setTimeout(function () {
+                //     parent.hm.closeProgress(); //当页面加载完毕执行
+                // }, 500);
+            }
+        });
     }
-
   });
 });
 </script>

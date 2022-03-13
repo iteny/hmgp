@@ -16,7 +16,8 @@ func helloHandler(c *gin.Context) {
 // SetupRouter 配置路由信息
 func Admin(e *gin.Engine) {
 	login := admin.LoginCtrlObject()
-	e.GET("/admin/login", login.IndexHandler)
+	e.GET("/admin/login", login.Login)
+	e.POST("/admin/loginPost", login.LoginAjax)
 	e.GET("/hello", helloHandler)
 
 }
