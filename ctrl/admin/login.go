@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hmgp/common"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,13 +35,18 @@ func (e *LoginCtrl) LoginAjax(c *gin.Context) {
 	var account Account
 	if c.ShouldBind(&form) == nil {
 		fmt.Println(form.Username, form.Password)
-		result := e.Sql().Where("username = ? AND password = ?", form.Username, form.Password).Find(&account)
-		fmt.Println(result.Error)
-		fmt.Println(account)
-		if form.Username == "admin" && form.Password == "admin" {
-			c.JSON(200, gin.H{"status": 1, "info": "登录成功"})
+		if err := e.Sql().Where("username = ? AND password = ?", form.Username, e.Sha1PlusMd5(form.Password)).Find(&account).Error; err != nil {
+			c.JSON(200, gin.H{"status": 4, "info": err.Error()})
+		}
+		// fmt.Println(result.Error)
+		// fmt.Println(account)
+		if form.Username == account.Username && e.Sha1PlusMd5(form.Password) == account.Password {
+			session := sessions.Default(c)
+			session.Set("uid", account.Id)
+			session.Save()
+			c.JSON(200, gin.H{"status": 1, "info": "登录成功！"})
 		} else {
-			c.JSON(200, gin.H{"status": 4, "info": "登录失败"})
+			c.JSON(200, gin.H{"status": 4, "info": "用户名或密码错误！"})
 		}
 	}
 }

@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"hmgp/routers"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	r := gin.Default()
+	store := sessions.NewCookieStore([]byte("itenyzhaobin"))
+	r.Use(sessions.Sessions("mysession", store))
 	r.LoadHTMLGlob("view/**/*")
 	// r.Use(gin.Recovery())
 	r.Static("/static", "./static")
