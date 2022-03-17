@@ -18,7 +18,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/static/common/dist/css/adminlte.min.css">
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" onkeydown="shortcutKey();">
 <div class="login-box">
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
@@ -232,6 +232,15 @@ $(function () {
     }
   });
 });
+function shortcutKey() {
+    if (event.keyCode == 13) {
+        document.getElementById("loginButton").click(); //回车登录
+    }
+    if (event.keyCode == 18) {
+        $('[name="username"]').val("");
+        $('[name="password"]').val("");
+    }
+};
 </script>
 </body>
 </html>

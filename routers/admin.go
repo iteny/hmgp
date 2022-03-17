@@ -24,5 +24,7 @@ func Admin(e *gin.Engine) {
 	e.Use(middle.LoginVerify)
 	e.GET("/hello", helloHandler)
 	e.GET("/admin/index", index.Index)
+	e.GET("/admin/home", index.Home)
+	e.GET("/admin/menu", index.Menu)
 
 }
