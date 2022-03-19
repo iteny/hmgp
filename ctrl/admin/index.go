@@ -19,6 +19,7 @@ type Menu struct {
 	Isshow   int    `json:"isshow"`
 	Sort     int    `json:"sort"`
 	Icon     string `json:"icon"`
+	Type     int    `json:"type"`
 	Children []Menu `json:"children" gorm:"foreignKey:pid"`
 }
 
@@ -31,12 +32,12 @@ func (e *IndexCtrl) Index(c *gin.Context) {
 	ar := RecursiveMenu(menus, 0)
 	fmt.Println(ar)
 	// c.JSON(200, gin.H{"status": 1, "info": ar})
-	c.HTML(200, "index.html", gin.H{
+	c.HTML(200, "admin/index.html", gin.H{
 		"title": ar,
 	})
 }
 func (e *IndexCtrl) Home(c *gin.Context) {
-	c.HTML(200, "home.html", gin.H{
+	c.HTML(200, "admin/home.html", gin.H{
 		"title": "index",
 	})
 }
@@ -64,12 +65,22 @@ func RecursiveMenu(arr []Menu, pid int) (ar []Menu) {
 	return array
 }
 func (e *IndexCtrl) Menu(c *gin.Context) {
-	// var menus []Menu
-	// e.Sql().Order("sort").Find(&menus)
-	// ar := RecursiveMenu(menus, 0)
-	// fmt.Println(ar)
+	var menus []Menu
+	e.Sql().Order("sort").Find(&menus)
+	ar := RecursiveMenu(menus, 0)
+	fmt.Println(ar)
 	// c.JSON(200, gin.H{"status": 1, "info": ar})
-	c.HTML(200, "menu.html", gin.H{
-		"title": "asdfsad",
+	c.HTML(200, "admin/menu.html", gin.H{
+		"data": ar,
 	})
+}
+func (e *IndexCtrl) GetMenu(c *gin.Context) {
+	var menus []Menu
+	e.Sql().Order("sort").Find(&menus)
+	ar := RecursiveMenu(menus, 0)
+	fmt.Println(ar)
+	c.JSON(200, gin.H{"data": ar})
+	// c.HTML(200, "admin/menu.html", gin.H{
+	// 	"title": "asdfsad",
+	// })
 }

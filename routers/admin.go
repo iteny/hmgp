@@ -26,5 +26,5 @@ func Admin(e *gin.Engine) {
 	e.GET("/admin/index", index.Index)
 	e.GET("/admin/home", index.Home)
 	e.GET("/admin/menu", index.Menu)
-
+	e.POST("/admin/getMenu", index.GetMenu)
 }

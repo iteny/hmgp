@@ -25,7 +25,7 @@ func LoginCtrlObject() *LoginCtrl {
 	return &LoginCtrl{}
 }
 func (e *LoginCtrl) Login(c *gin.Context) {
-	c.HTML(200, "login.html", gin.H{
+	c.HTML(200, "admin/login.html", gin.H{
 		"title": "admin",
 	})
 }

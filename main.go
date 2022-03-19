@@ -12,7 +12,7 @@ func main() {
 	r := gin.Default()
 	store := sessions.NewCookieStore([]byte("itenyzhaobin"))
 	r.Use(sessions.Sessions("mysession", store))
-	r.LoadHTMLGlob("view/**/*")
+	r.LoadHTMLGlob("view/**/*.html")
 	// r.Use(gin.Recovery())
 	r.Static("/static", "./static")
 	// 加载静态资源
