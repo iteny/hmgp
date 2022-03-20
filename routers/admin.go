@@ -27,4 +27,6 @@ func Admin(e *gin.Engine) {
 	e.GET("/admin/home", index.Home)
 	e.GET("/admin/menu", index.Menu)
 	e.POST("/admin/getMenu", index.GetMenu)
+	e.GET("/admin/addMenu/:pid/:type", index.AddMenu)
+	e.POST("/admin/addMenuAjax", index.AddMenuAjax)
 }

@@ -1,0 +1,142 @@
+{{ define "admin/add_menu.html"}}
+<html>
+<div class="card card-danger" style="box-shadow: none;">
+    <div class="card-header">
+        <h3 class="card-title">
+            {{if eq .type "1"}}
+            新增目录
+            {{else if eq .type "2"}}
+            新增菜单
+            {{else}}
+            新增功能
+            {{end}}
+        </h3>
+    </div>
+    <div class="card-body">
+        <!-- Date dd/mm/yyyy -->
+        <form id="addMenuForm" action="/admin/addMenuAjax" method="post">
+        <input type="hidden" name="pid" value="{{.pid}}">
+        <input type="hidden" name="type" value="{{.type}}">
+        <div class="form-group">
+            <label>
+                菜单名称
+            </label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input type="name" name="name" class="form-control" placeholder="菜单名称">
+            </div>
+            <!-- /.input group -->
+        </div>
+        <div class="form-group">
+            <label>链接</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="url" name="url" class="form-control" placeholder="链接">
+            </div>
+            <!-- /.input group -->
+        </div>
+        <div class="form-group">
+            <label>排序</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="sort" name="sort" class="form-control" placeholder="排序">
+            </div>
+            <!-- /.input group -->
+        </div>
+        <!-- /.form group -->
+
+        <!-- phone mask -->
+        <div class="form-group">
+            <label>状态</label>
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="isshow" name="isshow" class="form-control" placeholder="状态">
+            </div>
+            <!-- /.input group -->
+        </div>
+        <div class="form-group">
+            <label>图标</label>
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="icon" name="icon" class="form-control" placeholder="图标">
+            </div>
+            <!-- /.input group -->
+        </div>
+
+        <!-- /.form group -->
+        <div class="form-group">
+            <a href="javascript:void(0)" id="addMenuButton" class="btn btn-primary">展开</a>
+            <a href="javascript:void(0)" onclick="collapseAll()" class="btn btn-primary">缩进</a>
+            <a href="javascript:void(0)" onclick="reload()" class="btn btn-primary">重载</a>
+            <a href="javascript:void(0)" onclick="draw()" class="btn btn-primary">画</a>
+        </div>
+    </form>
+</div>
+
+<!-- /.card-body -->
+</div>
+
+<!-- /.card -->
+<script>
+    $('#addMenuButton').on('click', function (e) {
+      e.preventDefault();
+    //   var flag = $("#loginForm").valid();
+    //   if(!flag){
+    //       //没有通过验证
+    //       return;
+    //   }
+      var form = $("#addMenuForm");
+      var that = $(this);
+              // form = $('form[name=hm_form_login]');
+              // vali = form.form('enableValidation').form('validate');
+              that.attr("option","false");
+      if (that.attr("option") == true){
+        alert("12321");
+      }else{
+        $.ajax({
+            url: form.attr('action'),
+            dataType:'json',
+            type:'POST',
+            data:form.serialize(),
+            beforeSend: function(){
+                // hm.openProgress(hm.language.loginMsg);
+            },
+            success: function(data){
+                if(data.status == 1){
+                    // toastr.success("登录成功!","success");
+                    // var redirect = "/admin/index";
+                    // setTimeout(function(){parent.window.location.href=redirect}, 3000);
+                    $('#catalog').modal('hide');
+                    dataTable.ajax.reload();
+                }else{
+                    toastr.error(data.info,"error");
+                }
+                that.attr("option","false");
+                
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // parent.hm.notice("error", 'status:'+XMLHttpRequest.status+',readyState:'+XMLHttpRequest.readyState+',textStatus:'+textStatus);
+                that.attr("option","false");
+                // setTimeout(function () {
+                //     parent.hm.closeProgress(); //当页面加载完毕执行
+                // }, 500);
+            }
+        });
+    }
+  });
+</script>
+</html>
+
+{{end}}

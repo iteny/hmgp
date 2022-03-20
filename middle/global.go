@@ -10,10 +10,10 @@ import (
 func LoginVerify(c *gin.Context) {
 	session := sessions.Default(c)
 	uid := session.Get("uid")
-	fmt.Println(uid)
+	// fmt.Println(uid)
 
 	uri := c.Request.RequestURI
-	fmt.Println(uri)
+	// fmt.Println(uri)
 	if uri == "/admin/loginPost" {
 		fmt.Println("娶你的")
 	} else {

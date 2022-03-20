@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"hmgp/common"
 
 	"github.com/gin-gonic/contrib/sessions"
@@ -34,7 +33,7 @@ func (e *LoginCtrl) LoginAjax(c *gin.Context) {
 	var form LoginForm
 	var account Account
 	if c.ShouldBind(&form) == nil {
-		fmt.Println(form.Username, form.Password)
+		// fmt.Println(form.Username, form.Password)
 		if err := e.Sql().Where("username = ? AND password = ?", form.Username, e.Sha1PlusMd5(form.Password)).Find(&account).Error; err != nil {
 			c.JSON(200, gin.H{"status": 4, "info": err.Error()})
 		}
