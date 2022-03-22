@@ -17,7 +17,7 @@ type Menu struct {
 	Url      string `json:"url"`
 	Name     string `json:"name"`
 	Pid      int    `json:"pid"`
-	Isshow   int    `json:"isshow"`
+	Status   int    `json:"status"`
 	Sort     int    `json:"sort"`
 	Icon     string `json:"icon"`
 	Type     int    `json:"type"`
@@ -27,9 +27,9 @@ type AddMenuForm struct {
 	Pid    string `form:"pid" binding:"required"`
 	Type   string `form:"type" binding:"required"`
 	Name   string `form:"name" binding:"required"`
-	Url    string `form:"url" binding:"required"`
+	Url    string `form:"menUrl" binding:"required"`
 	Sort   string `form:"sort" binding:"required"`
-	Isshow string `form:"isshow" binding:"required"`
+	Status string `form:"status" binding:"required"`
 	Icon   string `form:"icon" binding:"required"`
 }
 
@@ -101,17 +101,22 @@ func (e *IndexCtrl) AddMenu(c *gin.Context) {
 	})
 }
 func (e *IndexCtrl) AddMenuAjax(c *gin.Context) {
+	fmt.Println("asdfdsa2222222")
 	var form AddMenuForm
 	if c.ShouldBind(&form) == nil {
 		fmt.Println(form.Pid, form.Type)
 		pid, _ := strconv.Atoi(form.Pid)
 		itype, _ := strconv.Atoi(form.Type)
 		sort, _ := strconv.Atoi(form.Sort)
-		isshow, _ := strconv.Atoi(form.Isshow)
-		menu := Menu{Name: form.Name, Pid: pid, Type: itype, Url: form.Url, Sort: sort, Isshow: isshow, Icon: form.Icon}
+		status, _ := strconv.Atoi(form.Status)
+		menu := Menu{Name: form.Name, Pid: pid, Type: itype, Url: form.Url, Sort: sort, Status: status, Icon: form.Icon}
+		fmt.Println(menu)
 		result := e.Sql().Create(&menu)
+		fmt.Println("asdfdsa111111111111")
 		if result.Error == nil {
-			c.JSON(200, gin.H{"status": 1})
+			c.JSON(200, gin.H{"status": 1, "info": "新增成功"})
+		} else {
+			c.JSON(200, gin.H{"status": 2, "info": "新增失败"})
 		}
 	}
 }

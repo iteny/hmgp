@@ -67,18 +67,19 @@
     <!-- /.modal-dialog -->
   </div>
   <div id="hm_toolbar">
-    <a href="javascript:void(0)" onclick="expandAll()" class="btn btn-primary">展开</a>
-    <a href="javascript:void(0)" onclick="collapseAll()" class="btn btn-primary">缩进</a>
-    <a href="javascript:void(0)" onclick="reload()" class="btn btn-primary">重载</a>
-    <a href="javascript:void(0)" onclick="draw()" class="btn btn-primary">画</a>
-    <a href="javascript:void(0)" onclick="hm.getVerify(this)" data-url="/intendant/site/addMenu/0"
+    <button id="catalogButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#catalog" data-remote="/admin/addMenu/0/1" 
+      href="/admin/addMenu/0/1">
+      新增目录
+    </button>
+    <button onclick="expandAll()" class="btn btn-primary">展开</button>
+    <button onclick="collapseAll()" class="btn btn-primary">缩进</button>
+    <button onclick="reload()" class="btn btn-primary">重载</button>
+    <button onclick="draw()" class="btn btn-primary">画</button>
+    <!-- <a href="javascript:void(0)" onclick="hm.getVerify(this)" data-url="/intendant/site/addMenu/0"
       class="btn btn-primary" iconCls="icon-add" plain="true" language="html:addTopMenu"></a>
     <a href="javascript:void(0)" onclick="hm.datagridReload('#hm_menu','treegrid')" class="btn btn-primary"
-      iconCls="icon-2013040601125064_easyicon_net_16" plain="true" language="html:reloadDatagrid"></a>
-    <button id="mulu" type="button" class="btn btn-default" data-toggle="modal" data-target="#catalog"
-      href="/admin/addMenu/0/1">
-      Launch Default Modal
-    </button>
+      iconCls="icon-2013040601125064_easyicon_net_16" plain="true" language="html:reloadDatagrid"></a> -->
+    
   </div>
 
   <!-- jQuery -->
@@ -101,15 +102,32 @@
   <script src="/static/common/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
   <!-- AdminLTE App -->
   <script src="/static/common/dist/js/adminlte.min.js"></script>
+  <script src="/static/common/plugins/toastr/toastr.min.js"></script>
+<script src="/static/common/plugins/jquery-validation/jquery.validate.min.js"></script>
+  <script src="/static/common/plugins/jquery-validation/jquery.validata.custom.js"></script>
+  <script src="/static/common/plugins/custom.js"></script>
 
   <script type="text/javascript">
     var dataTable;
     var tree;
     $(function () {
-      var href = $('#mulu').attr('href');
-      $("#catalog .modal-body").load(href, function () {
-        $("#followStep1").modal("show");
-      })
+      var href = $('#catalogButton').attr('href');
+      //modal初始化和打开之前清除页面内容和缓存数据
+      
+      // $("#catalog .modal-body").load(href, function () {
+      //   // $("#catalog .modal-body").modal("show");
+      //   $('[name="name"]').val("");
+      // });
+      $('#catalog').on('hidden.bs.modal', function (e) {
+          $(this).find('.modal-body').html(' 等待结果，请稍后...');
+          $(this).removeData('bs.modal');
+      }).on('show.bs.modal', function (e) {
+        
+          var button = $(e.relatedTarget);
+          var modal = $(this);
+        
+          modal.find('.modal-body').load(button.data("remote"));
+      });
       dataTable = $('#treetable').DataTable({
         /**
          l - Length changing 改变每页显示多少条数据的控件
@@ -167,7 +185,7 @@
           },
           {
             data: function (data) {
-              if (data.isshow == 1) {
+              if (data.status == 1) {
                 return '<i class="fa fa-check-circle" aria-hidden="true" style="color:green;font-size:1.5em"></i>';
               } else {
                 return '<i class="fa fa-times-circle" aria-hidden="true" style="color:red;font-size:1.5em"></i>';
