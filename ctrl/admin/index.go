@@ -74,6 +74,8 @@ func RecursiveMenu(arr []Menu, pid int) (ar []Menu) {
 	}
 	return array
 }
+
+//菜单页面
 func (e *IndexCtrl) Menu(c *gin.Context) {
 	// var menus []Menu
 	// e.Sql().Order("sort").Find(&menus)
@@ -84,6 +86,8 @@ func (e *IndexCtrl) Menu(c *gin.Context) {
 		// "data": ar,
 	})
 }
+
+//获取菜单
 func (e *IndexCtrl) GetMenu(c *gin.Context) {
 	var menus []Menu
 	e.Sql().Order("sort").Find(&menus)
@@ -91,6 +95,8 @@ func (e *IndexCtrl) GetMenu(c *gin.Context) {
 	// fmt.Println(ar)
 	c.JSON(200, gin.H{"data": ar})
 }
+
+//新增菜单页面
 func (e *IndexCtrl) AddMenu(c *gin.Context) {
 	pid := c.Param("pid")
 	itype := c.Param("type")
@@ -100,6 +106,8 @@ func (e *IndexCtrl) AddMenu(c *gin.Context) {
 		"type": itype,
 	})
 }
+
+//新增菜单ajax
 func (e *IndexCtrl) AddMenuAjax(c *gin.Context) {
 	fmt.Println("asdfdsa2222222")
 	var form AddMenuForm
@@ -119,4 +127,19 @@ func (e *IndexCtrl) AddMenuAjax(c *gin.Context) {
 			c.JSON(200, gin.H{"status": 2, "info": "新增失败"})
 		}
 	}
+}
+
+//删除菜单
+func (e *IndexCtrl) DelMenuAjax(c *gin.Context) {
+	id, _ := strconv.Atoi(c.PostForm("id"))
+	pid, _ := strconv.Atoi(c.PostForm("pid"))
+	// fmt.Println(id, pid)
+	menu := Menu{}
+	if pid == 0 {
+		e.Sql().Delete(&menu, id)
+		e.Sql().Where("pid = ?", id).Delete(Menu{})
+	} else {
+		e.Sql().Delete(&menu, id)
+	}
+	c.JSON(200, gin.H{"status": 1, "info": "删除成功"})
 }

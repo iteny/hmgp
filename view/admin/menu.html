@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="/static/common/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="/static/common/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="/static/common/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/common/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/static/common/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="/static/common/dist/css/me.css">
@@ -67,8 +68,8 @@
     <!-- /.modal-dialog -->
   </div>
   <div id="hm_toolbar">
-    <button id="catalogButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#catalog" data-remote="/admin/addMenu/0/1" 
-      href="/admin/addMenu/0/1">
+    <button id="catalogButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#catalog"
+      data-remote="/admin/addMenu/0/1" href="/admin/addMenu/0/1">
       新增目录
     </button>
     <button onclick="expandAll()" class="btn btn-primary">展开</button>
@@ -79,7 +80,7 @@
       class="btn btn-primary" iconCls="icon-add" plain="true" language="html:addTopMenu"></a>
     <a href="javascript:void(0)" onclick="hm.datagridReload('#hm_menu','treegrid')" class="btn btn-primary"
       iconCls="icon-2013040601125064_easyicon_net_16" plain="true" language="html:reloadDatagrid"></a> -->
-    
+
   </div>
 
   <!-- jQuery -->
@@ -100,10 +101,11 @@
   <script src="/static/common/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
   <script src="/static/common/plugins/datatables-buttons/js/buttons.print.min.js"></script>
   <script src="/static/common/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+  <script src="/static/common/plugins/sweetalert2/sweetalert2.min.js"></script>
   <!-- AdminLTE App -->
   <script src="/static/common/dist/js/adminlte.min.js"></script>
   <script src="/static/common/plugins/toastr/toastr.min.js"></script>
-<script src="/static/common/plugins/jquery-validation/jquery.validate.min.js"></script>
+  <script src="/static/common/plugins/jquery-validation/jquery.validate.min.js"></script>
   <script src="/static/common/plugins/jquery-validation/jquery.validata.custom.js"></script>
   <script src="/static/common/plugins/custom.js"></script>
 
@@ -111,22 +113,18 @@
     var dataTable;
     var tree;
     $(function () {
+      setTimeout(function () {}, 1000);
       var href = $('#catalogButton').attr('href');
-      //modal初始化和打开之前清除页面内容和缓存数据
-      
-      // $("#catalog .modal-body").load(href, function () {
-      //   // $("#catalog .modal-body").modal("show");
-      //   $('[name="name"]').val("");
-      // });
+
       $('#catalog').on('hidden.bs.modal', function (e) {
-          $(this).find('.modal-body').html(' 等待结果，请稍后...');
-          $(this).removeData('bs.modal');
+        $(this).find('.modal-body').html(' 等待结果，请稍后...');
+        $(this).removeData('bs.modal');
       }).on('show.bs.modal', function (e) {
-        
-          var button = $(e.relatedTarget);
-          var modal = $(this);
-        
-          modal.find('.modal-body').load(button.data("remote"));
+
+        var button = $(e.relatedTarget);
+        var modal = $(this);
+
+        modal.find('.modal-body').load(button.data("remote"));
       });
       dataTable = $('#treetable').DataTable({
         /**
@@ -193,15 +191,23 @@
             }
           }, {
             data: function (data) {
-              var html = "<a onclick=\"edit('" + data.id +
-                "');\" class='btn btn-success ' ><i class='fa fa-edit'></i> 编辑</a> ";
+              var html =
+                '<a style="margin-right:5px" onclick="delAlert(this)" class="btn btn-success" data-id="' +
+                data.id + '" data-pid="' + data.pid + '" data-type="' + data.type + '" data-name="' + data
+                .name + '" ><i class="fa fa-edit"></i>编辑</a>';
               if (data.pid == 0) {
-                html = html + "<a onclick=\"add('" + data.id +
-                  "');\" class='btn btn-primary ' ><i class='fa fa-plus'></i> 添加下级菜单</a> ";
+                html = html +
+                  '<a style="margin-right:5px" onclick="delAlert(this)" class="btn btn-primary" data-id="' +
+                  data.id + '" data-pid="' + data.pid + '" data-type="' + data.type + '" data-name="' + data
+                  .name + '"><i class="fa fa-plus"></i>添加下级菜单</a>';
+                //   html = html + "<a onclick=\"add('" + data.id +
+                //     "');\" class='btn btn-primary ' ><i class='fa fa-plus'></i> 添加下级菜单</a> ";
               }
-
-              html = html + "<a onclick=\"deleteObject('" + data.id +
-                "');\" class='btn btn-danger ' ><i class='fa fa-trash-o'></i> 删除</a> ";
+              html = html +
+                '<a style="margin-right:5px" onclick="delAlert(this)" class="btn btn-danger" data-id="' +
+                data.id + '" data-pid="' + data.pid + '" data-type="' + data.type + '" data-name="' + data
+                .name + '" data-url="/admin/delMenuAjax"><i class="fa fa-trash-o"></i>删除</a>';
+              // var html = html + '<a href="javascript:void(0)" onclick="delAlert(this)" class="btn btn-danger"><i class="fa fa-trash-o" data-id="'+data.id+'" data-pid="'+data.pid+'" data-type="'+data.type+'" data-name="'+data.name+'"></i> 删除</a>';
               return html;
             }
           }
@@ -237,6 +243,85 @@
 
     function draw() {
       dataTable.draw(false);
+    }
+
+    function delAlert(me) {
+      var that = $(me);
+      id = that.attr('data-id');
+      pid = that.attr('data-pid');
+      type = that.attr('data-type');
+      name = that.attr('data-name');
+      url = that.attr('data-url');
+      var typeinfo;
+      if (type == 1) {
+        typeinfo = "目录";
+      } else if (type == 2) {
+        typeinfo = "菜单";
+      } else {
+        typeinfo = "功能";
+      }
+      Swal.fire({
+        title: '你确定删除<span style="color:red">' + name + '这个' + typeinfo + '?</span>',
+        text: "你将无法恢复!",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: "关闭",
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '确定, 删除!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: url,
+            dataType: 'json',
+            type: 'POST',
+            data: {
+              id: id,
+              pid:pid,
+            },
+            beforeSend: function () {
+              Swal.fire({
+                title: '等待中!',
+                html: '正在处理......!',
+                icon: 'info',
+                timer: 9999999,
+                timerProgressBar: true,
+                allowOutsideClick: false, //点击外部不会关闭对话框
+                didOpen: () => {
+                  Swal.showLoading()
+                },
+              })
+            },
+            success: function (data) {
+              // that.linkbutton('enable');
+              // parent.hm.closeProgress();
+              // externalFunc(data)
+              dataTable.ajax.reload();
+              Swal.fire({
+                title:'删除!',
+                html:'你的菜单已经被删除.',
+                icon:'success',
+                timer:3000,
+              })
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+              // parent.hm.notice("error", 'status:' + XMLHttpRequest.status + ',readyState:' + XMLHttpRequest
+              //   .readyState + ',textStatus:' + textStatus);
+              // that.linkbutton('enable');
+              // parent.hm.closeProgress();
+              // Swal.fire({
+              //           icon: 'success',
+              //           title: '操作成功',
+              //       }).then((result) => {
+              //           if (result.dismiss === Swal.DismissReason.timer) {
+              //               window.location.reload();
+              //           }
+              //       })
+            }
+          });
+          
+        }
+      })
     }
   </script>
 </body>
