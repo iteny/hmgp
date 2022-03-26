@@ -27,7 +27,10 @@ func Admin(e *gin.Engine) {
 	e.GET("/admin/home", index.Home)
 	e.GET("/admin/menu", index.Menu)
 	e.POST("/admin/getMenu", index.GetMenu)
-	e.GET("/admin/addMenu/:pid/:type", index.AddMenu)
+	e.GET("/admin/addCatalog/:pid/:type", index.AddCatalog)
+	e.GET("/admin/addMenu/:pid/:name", index.AddMenu)
+	e.GET("/admin/editMenu/:id", index.EditMenu)
 	e.POST("/admin/addMenuAjax", index.AddMenuAjax)
+	e.POST("/admin/editMenuAjax", index.EditMenuAjax)
 	e.POST("/admin/delMenuAjax", index.DelMenuAjax)
 }

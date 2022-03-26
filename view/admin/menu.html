@@ -8,8 +8,8 @@
   <title>AdminLTE 3 | DataTables</title>
 
   <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/static/common/plugins/fontawesome-free/css/all.min.css">
   <!-- DataTables -->
@@ -69,7 +69,7 @@
   </div>
   <div id="hm_toolbar">
     <button id="catalogButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#catalog"
-      data-remote="/admin/addMenu/0/1" href="/admin/addMenu/0/1">
+      data-remote="/admin/addCatalog/0/1">
       新增目录
     </button>
     <button onclick="expandAll()" class="btn btn-primary">展开</button>
@@ -113,7 +113,7 @@
     var dataTable;
     var tree;
     $(function () {
-      setTimeout(function () {}, 1000);
+      // setTimeout(function () {}, 1000);
       var href = $('#catalogButton').attr('href');
 
       $('#catalog').on('hidden.bs.modal', function (e) {
@@ -191,23 +191,15 @@
             }
           }, {
             data: function (data) {
-              var html =
-                '<a style="margin-right:5px" onclick="delAlert(this)" class="btn btn-success" data-id="' +
-                data.id + '" data-pid="' + data.pid + '" data-type="' + data.type + '" data-name="' + data
-                .name + '" ><i class="fa fa-edit"></i>编辑</a>';
+              var html = '<button style="margin-right:5px" type="button" class="btn btn-success" data-toggle="modal" data-target="#catalog" data-remote="/admin/editMenu/'+data.id+'">修改</button>';
               if (data.pid == 0) {
                 html = html +
-                  '<a style="margin-right:5px" onclick="delAlert(this)" class="btn btn-primary" data-id="' +
-                  data.id + '" data-pid="' + data.pid + '" data-type="' + data.type + '" data-name="' + data
-                  .name + '"><i class="fa fa-plus"></i>添加下级菜单</a>';
-                //   html = html + "<a onclick=\"add('" + data.id +
-                //     "');\" class='btn btn-primary ' ><i class='fa fa-plus'></i> 添加下级菜单</a> ";
+                  '<button style="margin-right:5px" type="button" class="btn btn-primary" data-toggle="modal" data-target="#catalog" data-remote="/admin/addMenu/'+data.id+'/'+data.name+'">添加下级菜单</button>';
               }
               html = html +
                 '<a style="margin-right:5px" onclick="delAlert(this)" class="btn btn-danger" data-id="' +
                 data.id + '" data-pid="' + data.pid + '" data-type="' + data.type + '" data-name="' + data
                 .name + '" data-url="/admin/delMenuAjax"><i class="fa fa-trash-o"></i>删除</a>';
-              // var html = html + '<a href="javascript:void(0)" onclick="delAlert(this)" class="btn btn-danger"><i class="fa fa-trash-o" data-id="'+data.id+'" data-pid="'+data.pid+'" data-type="'+data.type+'" data-name="'+data.name+'"></i> 删除</a>';
               return html;
             }
           }
@@ -277,7 +269,7 @@
             type: 'POST',
             data: {
               id: id,
-              pid:pid,
+              pid: pid,
             },
             beforeSend: function () {
               Swal.fire({
@@ -293,33 +285,24 @@
               })
             },
             success: function (data) {
-              // that.linkbutton('enable');
-              // parent.hm.closeProgress();
-              // externalFunc(data)
               dataTable.ajax.reload();
               Swal.fire({
-                title:'删除!',
-                html:'你的菜单已经被删除.',
-                icon:'success',
-                timer:3000,
+                title: '删除!',
+                html: '你的菜单已经被删除.',
+                icon: 'success',
+                timer: 3000,
               })
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-              // parent.hm.notice("error", 'status:' + XMLHttpRequest.status + ',readyState:' + XMLHttpRequest
-              //   .readyState + ',textStatus:' + textStatus);
-              // that.linkbutton('enable');
-              // parent.hm.closeProgress();
-              // Swal.fire({
-              //           icon: 'success',
-              //           title: '操作成功',
-              //       }).then((result) => {
-              //           if (result.dismiss === Swal.DismissReason.timer) {
-              //               window.location.reload();
-              //           }
-              //       })
+              Swal.fire({
+                title: '删除!',
+                html: '操作失败.原因' + XMLHttpRequest.status + XMLHttpRequest.readyState + textStatus + '',
+                icon: 'error',
+                timer: 3000,
+              })
             }
           });
-          
+
         }
       })
     }

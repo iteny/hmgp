@@ -32,6 +32,15 @@ type AddMenuForm struct {
 	Status string `form:"status" binding:"required"`
 	Icon   string `form:"icon" binding:"required"`
 }
+type EditMenuForm struct {
+	Id     int    `form:"id" binding:"required"`
+	Type   int    `form:"type" binding:"required"`
+	Name   string `form:"name" binding:"required"`
+	Url    string `form:"menUrl" binding:"required"`
+	Sort   int    `form:"sort" binding:"required"`
+	Status int    `form:"status" binding:"required"`
+	Icon   string `form:"icon" binding:"required"`
+}
 
 func IndexCtrlObject() *IndexCtrl {
 	return &IndexCtrl{}
@@ -99,11 +108,35 @@ func (e *IndexCtrl) GetMenu(c *gin.Context) {
 //新增菜单页面
 func (e *IndexCtrl) AddMenu(c *gin.Context) {
 	pid := c.Param("pid")
-	itype := c.Param("type")
-	fmt.Println("sadfsadf" + itype)
+	name := c.Param("name")
+	// fmt.Println("sadfsadf" + itype)
 	c.HTML(200, "admin/add_menu.html", gin.H{
 		"pid":  pid,
+		"name": name,
+	})
+}
+
+//新增目录页面
+func (e *IndexCtrl) AddCatalog(c *gin.Context) {
+	pid := c.Param("pid")
+	itype := c.Param("type")
+	fmt.Println("sadfsadf" + itype)
+	c.HTML(200, "admin/add_catalog.html", gin.H{
+		"pid":  pid,
 		"type": itype,
+	})
+}
+
+//编辑菜单页面
+func (e *IndexCtrl) EditMenu(c *gin.Context) {
+	id := c.Param("id")
+	// name := c.Param("name")
+	// fmt.Println("sadfsadf" + itype)
+	var menu = Menu{}
+	e.Sql().First(&menu, id)
+	c.HTML(200, "admin/edit_menu.html", gin.H{
+		"result": menu,
+		// "name": name,
 	})
 }
 
@@ -125,6 +158,19 @@ func (e *IndexCtrl) AddMenuAjax(c *gin.Context) {
 			c.JSON(200, gin.H{"status": 1, "info": "新增成功"})
 		} else {
 			c.JSON(200, gin.H{"status": 2, "info": "新增失败"})
+		}
+	}
+}
+
+//修改菜单ajax
+func (e *IndexCtrl) EditMenuAjax(c *gin.Context) {
+	var form EditMenuForm
+	if c.ShouldBind(&form) == nil {
+		result := e.Sql().Model(&Menu{}).Where("id = ?", form.Id).Updates(map[string]interface{}{"Name": form.Name, "Type": form.Type, "Url": form.Url, "Sort": form.Sort, "Status": form.Status, "Icon": form.Icon})
+		if result.Error == nil {
+			c.JSON(200, gin.H{"status": 1, "info": "修改成功"})
+		} else {
+			c.JSON(200, gin.H{"status": 2, "info": "修改失败"})
 		}
 	}
 }

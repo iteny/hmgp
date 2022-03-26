@@ -11,7 +11,7 @@
  Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 18/03/2022 03:55:35
+ Date: 27/03/2022 03:09:33
 */
 
 SET NAMES utf8mb4;
@@ -26,7 +26,7 @@ CREATE TABLE `hm_account`  (
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of hm_account
@@ -42,16 +42,18 @@ CREATE TABLE `hm_menu`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `sort` int NOT NULL,
-  `isshow` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `pid` int NOT NULL,
   `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `type` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of hm_menu
 -- ----------------------------
-INSERT INTO `hm_menu` VALUES (1, '设置', NULL, 1, 1, 0, 'fa-tachometer-alt');
-INSERT INTO `hm_menu` VALUES (2, '菜单管理', '/admin/menu', 1, 1, 1, 'nav-icon');
+INSERT INTO `hm_menu` VALUES (1, '设置', '#', 1, 1, 0, 'fa-tachometer-alt', 1);
+INSERT INTO `hm_menu` VALUES (2, '菜单管理', '/admin/menu', 1, 1, 1, 'nav-icon', 2);
+INSERT INTO `hm_menu` VALUES (16, '啥地方地方', 'sadfasd', 2, 1, 1, 'nav-icon', 2);
 
 SET FOREIGN_KEY_CHECKS = 1;

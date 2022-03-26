@@ -1,15 +1,22 @@
-{{ define "admin/add_menu.html"}}
+{{ define "admin/add_catalog.html"}}
 <html>
 <div class="card card-danger" style="box-shadow: none;">
     <div class="card-header">
         <h3 class="card-title">
-            目录({{.name}})的下级
+            {{if eq .type "1"}}
+            新增目录
+            {{else if eq .type "2"}}
+            新增菜单
+            {{else}}
+            新增功能
+            {{end}}
         </h3>
     </div>
     <div class="card-body">
         <!-- Date dd/mm/yyyy -->
         <form id="addMenuForm" action="/admin/addMenuAjax" method="post">
             <input type="hidden" name="pid" value="{{.pid}}">
+            <input type="hidden" name="type" value="{{.type}}">
             <div class="form-group">
                 <label>
                     菜单名称
@@ -67,18 +74,7 @@
                 </div>
                 <!-- /.input group -->
             </div>
-            <div class="form-group">
-                <label>类型</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-rss-square"></i></span>
-                    </div>
-                    <select class="custom-select rounded-0" type="type" name="type">
-                    <option value="2">菜单</option>
-                    <option value="3">功能</option>
-                    </select>
-                </div>
-              </div>
+
             <!-- /.form group -->
             <div class="form-group">
                 <button id="addMenuButton" class="btn btn-primary">新增</button>
@@ -182,47 +178,25 @@ $(function () {
                 type: 'POST',
                 data: form.serialize(),
                 beforeSend: function () {
-                    Swal.fire({
-                        title: '等待中!',
-                        html: '正在处理......!',
-                        icon: 'info',
-                        timer: 9999999,
-                        timerProgressBar: true,
-                        allowOutsideClick: false, //点击外部不会关闭对话框
-                        didOpen: () => {
-                        Swal.showLoading()
-                        },
-                    })
+                    // hm.openProgress(hm.language.loginMsg);
                 },
                 success: function (data) {
                     if (data.status == 1) {
-                        Swal.fire({
-                            title: '新增!',
-                            html: data.info,
-                            icon: 'success',
-                            timer: 3000,
-                        });
+                        toastr.success(data.info, "success");
                         $('#catalog').modal('hide');
                         dataTable.ajax.reload();
                     } else {
-                        Swal.fire({
-                            title: '新增!',
-                            html: data.info,
-                            icon: 'error',
-                            timer: 3000,
-                        })
+                        toastr.error(data.info, "error");
                     }
                     that.attr("option", "false");
 
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    Swal.fire({
-                        title: '新增!',
-                        html: '操作失败.原因' + XMLHttpRequest.status + XMLHttpRequest.readyState + textStatus + '',
-                        icon: 'error',
-                        timer: 3000,
-                    })
+                    // parent.hm.notice("error", 'status:'+XMLHttpRequest.status+',readyState:'+XMLHttpRequest.readyState+',textStatus:'+textStatus);
                     that.attr("option", "false");
+                    // setTimeout(function () {
+                    //     parent.hm.closeProgress(); //当页面加载完毕执行
+                    // }, 500);
                 }
             });
         }

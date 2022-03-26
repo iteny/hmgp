@@ -1,4 +1,4 @@
-{{ define "admin/add_menu.html"}}
+{{ define "admin/edit_menu.html"}}
 <html>
 <div class="card card-danger" style="box-shadow: none;">
     <div class="card-header">
@@ -8,8 +8,8 @@
     </div>
     <div class="card-body">
         <!-- Date dd/mm/yyyy -->
-        <form id="addMenuForm" action="/admin/addMenuAjax" method="post">
-            <input type="hidden" name="pid" value="{{.pid}}">
+        <form id="editMenuForm" action="/admin/editMenuAjax" method="post">
+            <input type="hidden" name="id" value="{{.result.Id}}">
             <div class="form-group">
                 <label>
                     菜单名称
@@ -18,7 +18,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-book"></i></span>
                     </div>
-                    <input type="name" name="name" class="form-control" placeholder="菜单名称">
+                    <input type="name" name="name" class="form-control" placeholder="菜单名称" value="{{.result.Name}}">
                 </div>
                 <!-- /.input group -->
             </div>
@@ -28,7 +28,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-link"></i></span>
                     </div>
-                    <input type="menUrl" name="menUrl" class="form-control" placeholder="链接">
+                    <input type="menUrl" name="menUrl" class="form-control" placeholder="链接" value="{{.result.Url}}">
                 </div>
                 <!-- /.input group -->
             </div>
@@ -38,7 +38,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-sort"></i></span>
                     </div>
-                    <input type="sort" name="sort" class="form-control" placeholder="排序">
+                    <input type="sort" name="sort" class="form-control" placeholder="排序" value="{{.result.Sort}}">
                 </div>
                 <!-- /.input group -->
             </div>
@@ -52,7 +52,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-battery-full"></i></span>
                     </div>
-                    <input type="status" name="status" class="form-control" placeholder="状态">
+                    <input type="status" name="status" class="form-control" placeholder="状态" value="{{.result.Status}}">
                 </div>
                 <!-- /.input group -->
             </div>
@@ -63,7 +63,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-rss-square"></i></span>
                     </div>
-                    <input type="icon" name="icon" class="form-control" placeholder="图标">
+                    <input type="icon" name="icon" class="form-control" placeholder="图标" value="{{.result.Icon}}">
                 </div>
                 <!-- /.input group -->
             </div>
@@ -73,7 +73,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-rss-square"></i></span>
                     </div>
-                    <select class="custom-select rounded-0" type="type" name="type">
+                    <select id="selectdef" class="custom-select rounded-0" type="type" name="type">
                     <option value="2">菜单</option>
                     <option value="3">功能</option>
                     </select>
@@ -81,7 +81,7 @@
               </div>
             <!-- /.form group -->
             <div class="form-group">
-                <button id="addMenuButton" class="btn btn-primary">新增</button>
+                <button id="editMenuButton" class="btn btn-primary">修改</button>
                 <button id="closeDialog" class="btn btn-danger"  data-dismiss="modal">关闭</a>
             </div>
         </form>
@@ -94,12 +94,13 @@
 
 <script>
 $(function () {
+    $("#selectdef").val(['{{.result.Type}}']);
     $.validator.setDefaults({
         submitHandler: function () {
             alert("Form successful submitted!");
         }
     });
-    $('#addMenuForm').validate({
+    $('#editMenuForm').validate({
         onsubmit: false,
         rules: {
             name: {
@@ -163,14 +164,14 @@ $(function () {
             $(element).removeClass('is-invalid');
         },
     });
-    $('#addMenuButton').on('click', function (e) {
+    $('#editMenuButton').on('click', function (e) {
         e.preventDefault();
-          var flag = $("#addMenuForm").valid();
+          var flag = $("#editMenuForm").valid();
           if(!flag){
               //没有通过验证
               return;
           }
-        var form = $("#addMenuForm");
+        var form = $("#editMenuForm");
         var that = $(this);
         that.attr("option", "false");
         if (that.attr("option") == true) {
@@ -197,7 +198,7 @@ $(function () {
                 success: function (data) {
                     if (data.status == 1) {
                         Swal.fire({
-                            title: '新增!',
+                            title: '修改!',
                             html: data.info,
                             icon: 'success',
                             timer: 3000,
@@ -206,7 +207,7 @@ $(function () {
                         dataTable.ajax.reload();
                     } else {
                         Swal.fire({
-                            title: '新增!',
+                            title: '修改!',
                             html: data.info,
                             icon: 'error',
                             timer: 3000,
@@ -217,12 +218,13 @@ $(function () {
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     Swal.fire({
-                        title: '新增!',
+                        title: '修改!',
                         html: '操作失败.原因' + XMLHttpRequest.status + XMLHttpRequest.readyState + textStatus + '',
                         icon: 'error',
                         timer: 3000,
                     })
                     that.attr("option", "false");
+                    
                 }
             });
         }
