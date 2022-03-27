@@ -178,25 +178,47 @@ $(function () {
                 type: 'POST',
                 data: form.serialize(),
                 beforeSend: function () {
-                    // hm.openProgress(hm.language.loginMsg);
+                    Swal.fire({
+                        title: '等待中!',
+                        html: '正在处理......!',
+                        icon: 'info',
+                        timer: 9999999,
+                        timerProgressBar: true,
+                        allowOutsideClick: false, //点击外部不会关闭对话框
+                        didOpen: () => {
+                        Swal.showLoading()
+                        },
+                    })
                 },
                 success: function (data) {
                     if (data.status == 1) {
-                        toastr.success(data.info, "success");
+                        Swal.fire({
+                            title: '新增!',
+                            html: data.info,
+                            icon: 'success',
+                            timer: 3000,
+                        });
                         $('#catalog').modal('hide');
                         dataTable.ajax.reload();
                     } else {
-                        toastr.error(data.info, "error");
+                        Swal.fire({
+                            title: '新增!',
+                            html: data.info,
+                            icon: 'error',
+                            timer: 3000,
+                        })
                     }
                     that.attr("option", "false");
 
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    // parent.hm.notice("error", 'status:'+XMLHttpRequest.status+',readyState:'+XMLHttpRequest.readyState+',textStatus:'+textStatus);
+                    Swal.fire({
+                        title: '新增!',
+                        html: '操作失败.原因' + XMLHttpRequest.status + XMLHttpRequest.readyState + textStatus + '',
+                        icon: 'error',
+                        timer: 3000,
+                    })
                     that.attr("option", "false");
-                    // setTimeout(function () {
-                    //     parent.hm.closeProgress(); //当页面加载完毕执行
-                    // }, 500);
                 }
             });
         }

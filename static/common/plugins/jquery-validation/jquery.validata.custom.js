@@ -109,7 +109,8 @@ $(function () {
      }, "用户名必须以字母开头，长度为5 ~ 16个字符，下划线为字母数字  ");
      //判断menu url
      jQuery.validator.addMethod("isMenUrl", function (value, element) {
-          return this.optional(element) || /^[A-Za-z/]{2,80}$/i.test(value);
+          var reg = RegExp(/[(\#)]+/);
+          return this.optional(element) || /^[A-Za-z-/]{1,80}$/i.test(value) || reg.test(value);
      }, "请输入有效的菜单链接");
      //判断status
      jQuery.validator.addMethod("isStatus", function (value, element) {

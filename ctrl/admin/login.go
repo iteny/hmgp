@@ -42,6 +42,7 @@ func (e *LoginCtrl) LoginAjax(c *gin.Context) {
 		if form.Username == account.Username && e.Sha1PlusMd5(form.Password) == account.Password {
 			session := sessions.Default(c)
 			session.Set("uid", account.Id)
+			session.Set("username", account.Username)
 			session.Save()
 			c.JSON(200, gin.H{"status": 1, "info": "登录成功！"})
 		} else {
