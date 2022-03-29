@@ -8,6 +8,9 @@ watch_all = true                   # Watch all sub-directories
 watch_dirs = [
 	"$WORKDIR",
 	"$WORKDIR/ctrl/admin",
+  "$WORKDIR/ctrl/gpapp",
+  "$WORKDIR/common/form",
+  "$WORKDIR/common/sql",
 	# "$WORKDIR/ini",
 	# "$WORKDIR/common",
 	# "$WORKDIR/middle"

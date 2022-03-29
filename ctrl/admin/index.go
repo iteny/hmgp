@@ -11,14 +11,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type IndexCtrl struct {
+type AdminCtrl struct {
 	common.BaseCtrl
 }
 
-func IndexCtrlObject() *IndexCtrl {
-	return &IndexCtrl{}
+func AdminCtrlObject() *AdminCtrl {
+	return &AdminCtrl{}
 }
-func (e *IndexCtrl) Index(c *gin.Context) {
+func (e *AdminCtrl) Index(c *gin.Context) {
 	var menus []sql.Menu
 	e.Sql().Order("sort").Find(&menus)
 	ar := sql.RecursiveMenu(menus, 0)
@@ -29,19 +29,19 @@ func (e *IndexCtrl) Index(c *gin.Context) {
 		"username": username,
 	})
 }
-func (e *IndexCtrl) Home(c *gin.Context) {
+func (e *AdminCtrl) Home(c *gin.Context) {
 	c.HTML(200, "admin/home.html", gin.H{
 		"title": "index",
 	})
 }
 
 //菜单页面
-func (e *IndexCtrl) Menu(c *gin.Context) {
+func (e *AdminCtrl) Menu(c *gin.Context) {
 	c.HTML(200, "admin/menu.html", gin.H{})
 }
 
 //获取菜单
-func (e *IndexCtrl) GetMenu(c *gin.Context) {
+func (e *AdminCtrl) GetMenu(c *gin.Context) {
 	var menus []sql.Menu
 	e.Sql().Order("sort").Find(&menus)
 	ar := sql.RecursiveMenu(menus, 0)
@@ -49,7 +49,7 @@ func (e *IndexCtrl) GetMenu(c *gin.Context) {
 }
 
 //新增菜单页面
-func (e *IndexCtrl) AddMenu(c *gin.Context) {
+func (e *AdminCtrl) AddMenu(c *gin.Context) {
 	pid := c.Param("pid")
 	name := c.Param("name")
 	c.HTML(200, "admin/add_menu.html", gin.H{
@@ -59,7 +59,7 @@ func (e *IndexCtrl) AddMenu(c *gin.Context) {
 }
 
 //新增目录页面
-func (e *IndexCtrl) AddCatalog(c *gin.Context) {
+func (e *AdminCtrl) AddCatalog(c *gin.Context) {
 	pid := c.Param("pid")
 	itype := c.Param("type")
 	c.HTML(200, "admin/add_catalog.html", gin.H{
@@ -69,7 +69,7 @@ func (e *IndexCtrl) AddCatalog(c *gin.Context) {
 }
 
 //编辑菜单页面
-func (e *IndexCtrl) EditMenu(c *gin.Context) {
+func (e *AdminCtrl) EditMenu(c *gin.Context) {
 	id := c.Param("id")
 	var menu = sql.Menu{}
 	e.Sql().First(&menu, id)
@@ -79,7 +79,7 @@ func (e *IndexCtrl) EditMenu(c *gin.Context) {
 }
 
 //新增菜单ajax
-func (e *IndexCtrl) AddMenuAjax(c *gin.Context) {
+func (e *AdminCtrl) AddMenuAjax(c *gin.Context) {
 	var form form.AddMenuForm
 	if c.ShouldBind(&form) == nil {
 		menu := sql.Menu{Name: form.Name, Pid: form.Pid, Type: form.Type, Url: form.Url, Sort: form.Sort, Status: form.Status, Icon: form.Icon}
@@ -96,7 +96,7 @@ func (e *IndexCtrl) AddMenuAjax(c *gin.Context) {
 }
 
 //修改菜单ajax
-func (e *IndexCtrl) EditMenuAjax(c *gin.Context) {
+func (e *AdminCtrl) EditMenuAjax(c *gin.Context) {
 	var form form.EditMenuForm
 	if c.ShouldBind(&form) == nil {
 		result := e.Sql().Model(&sql.Menu{}).Where("id = ?", form.Id).Updates(map[string]interface{}{"Name": form.Name, "Type": form.Type, "Url": form.Url, "Sort": form.Sort, "Status": form.Status, "Icon": form.Icon})
@@ -111,7 +111,7 @@ func (e *IndexCtrl) EditMenuAjax(c *gin.Context) {
 }
 
 //删除菜单
-func (e *IndexCtrl) DelMenuAjax(c *gin.Context) {
+func (e *AdminCtrl) DelMenuAjax(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	pid, _ := strconv.Atoi(c.PostForm("pid"))
 	menu := sql.Menu{}

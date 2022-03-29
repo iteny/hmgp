@@ -114,18 +114,7 @@
     var tree;
     $(function () {
       // setTimeout(function () {}, 1000);
-      var href = $('#catalogButton').attr('href');
-
-      $('#catalog').on('hidden.bs.modal', function (e) {
-        $(this).find('.modal-body').html(' 等待结果，请稍后...');
-        $(this).removeData('bs.modal');
-      }).on('show.bs.modal', function (e) {
-
-        var button = $(e.relatedTarget);
-        var modal = $(this);
-
-        modal.find('.modal-body').load(button.data("remote"));
-      });
+      
       dataTable = $('#treetable').DataTable({
         /**
          l - Length changing 改变每页显示多少条数据的控件
@@ -217,6 +206,18 @@
         expandAll: true,
         expandIcon: '<i class="fa fa-plus-square" aria-hidden="true"></i>',
         collapseIcon: '<i class="fa fa-minus-square" aria-hidden="true"></i>'
+      });
+      var href = $('#catalogButton').attr('href');
+
+      $('#catalog').on('hidden.bs.modal', function (e) {
+        $(this).find('.modal-body').html(' 等待结果，请稍后...');
+        $(this).removeData('bs.modal');
+      }).on('show.bs.modal', function (e) {
+
+        var button = $(e.relatedTarget);
+        var modal = $(this);
+
+        modal.find('.modal-body').load(button.data("remote"));
       });
     });
 

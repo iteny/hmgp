@@ -44,6 +44,7 @@ func main() {
 	// }))
 
 	routers.Admin(r)
+	routers.Category(r)
 	if err := r.Run(); err != nil {
 		fmt.Println("startup service failed, err:%v\n", err)
 	}

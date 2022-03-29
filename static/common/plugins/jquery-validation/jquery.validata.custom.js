@@ -110,7 +110,7 @@ $(function () {
      //判断menu url
      jQuery.validator.addMethod("isMenUrl", function (value, element) {
           var reg = RegExp(/[(\#)]+/);
-          return this.optional(element) || /^[A-Za-z-/]{1,80}$/i.test(value) || reg.test(value);
+          return this.optional(element) || /^[A-Za-z-/-_]{1,80}$/i.test(value) || reg.test(value);
      }, "请输入有效的菜单链接");
      //判断status
      jQuery.validator.addMethod("isStatus", function (value, element) {
