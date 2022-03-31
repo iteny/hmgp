@@ -42,9 +42,9 @@ func main() {
 	// 		param.ErrorMessage,
 	// 	)
 	// }))
-
-	routers.Admin(r)
 	routers.Category(r)
+	routers.Admin(r)
+
 	if err := r.Run(); err != nil {
 		fmt.Println("startup service failed, err:%v\n", err)
 	}

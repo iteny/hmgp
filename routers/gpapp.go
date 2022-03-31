@@ -2,7 +2,6 @@ package routers
 
 import (
 	"hmgp/ctrl/gpapp"
-	"hmgp/middle"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +19,7 @@ func Category(e *gin.Engine) {
 	// e.GET("/admin/login", login.Login)
 
 	// e.POST("/admin/loginPost", login.LoginAjax)
-	e.Use(middle.LoginVerify)
+	// e.Use(middle.LoginVerify)
 	e.GET("/gpapp/category", cg.Category)
 	e.POST("/gpapp/getCategory", cg.GetCategoryAjax)
 	// e.GET("/hello", helloHandler)
