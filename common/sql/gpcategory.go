@@ -8,3 +8,9 @@ type GpCategory struct {
 	Sort   int    `json:"sort"`
 	Icon   string `json:"icon"`
 }
+type GpCategoryContent struct {
+	Id      int    `json:"id"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Pid     int    `json:"pid"`
+}

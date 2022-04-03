@@ -22,6 +22,7 @@ func Category(e *gin.Engine) {
 	// e.Use(middle.LoginVerify)
 	e.GET("/gpapp/category", cg.Category)
 	e.POST("/gpapp/getCategory", cg.GetCategoryAjax)
+	e.POST("/gpapp/getCategoryContent", cg.GetCategoryContent)
 	// e.GET("/hello", helloHandler)
 	// e.GET("/admin/index", index.Index)
 	// e.GET("/admin/home", index.Home)

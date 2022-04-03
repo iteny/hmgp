@@ -42,6 +42,18 @@ func (e *CategoryCtrl) GetCategoryAjax(c *gin.Context) {
 	c.JSON(200, gin.H{"data": category})
 }
 
+//获取菜单
+func (e *CategoryCtrl) GetCategoryContent(c *gin.Context) {
+	var categoryContent []sql.GpCategoryContent
+	pid, _ := strconv.Atoi(c.PostForm("pid"))
+	fmt.Println("你你你", pid)
+	fmt.Printf("v1 type:%T\n", pid)
+	e.Sql().Where("pid = ?", pid).Find(&categoryContent)
+	fmt.Println(categoryContent)
+	// ar := sql.RecursiveMenu(menus, 0)
+	c.JSON(200, gin.H{"data": categoryContent})
+}
+
 //菜单页面
 func (e *CategoryCtrl) Category(c *gin.Context) {
 	c.HTML(200, "gpapp/category.html", gin.H{})
